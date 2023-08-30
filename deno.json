@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "hono": "https://deno.land/x/hono@v3.3.4/mod.ts",
+    "hono:cors": "https://deno.land/x/hono@v3.3.4/middleware.ts",
+    "dotenv": "https://deno.land/std@0.199.0/dotenv/load.ts",
+    "mongoose": "npm:mongoose"
+  },
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --allow-read --allow-sys index.ts"
+  }
+}
