@@ -1,6 +1,7 @@
+import "dotenv";
+
 import { Hono } from "hono";
 import { cors } from "hono:cors";
-import "dotenv";
 import initConnection from "./db.ts";
 
 initConnection();
