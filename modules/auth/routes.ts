@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import basicAuth, { BasicAuthError } from "./utils.ts";
 import * as authService from "./service.ts";
 import * as userService from "../user/services.ts";
-import httpResponse from "../../utils.ts";
+import httpResponse from "../../utils/http-response.ts";
 import {
   AdminUserAlreadyExists,
   InvalidCredentials,
@@ -59,10 +59,12 @@ route.post("/register", async (c) => {
   try {
     const body = await c.req.json();
     const user = await userService.create(body);
+    const codes = user.recoveryCodes;
 
-    user.password = "";
-
-    return httpResponse.created(c, user);
+    return httpResponse.created(c, {
+      user: user.mapped(),
+      codes: codes.join("."),
+    });
   } catch (error) {
     if (error instanceof AdminUserAlreadyExists) {
       return httpResponse.badRequestWithError(

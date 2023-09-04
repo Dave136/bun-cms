@@ -6,6 +6,7 @@ import { ExpiredTokenProvidedForRefresh } from "./error.ts";
 
 export type RegisterDTO = {
   name: string;
+  lastname: string;
   email: string;
   password: string;
   role: Role;

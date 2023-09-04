@@ -14,7 +14,9 @@ interface UserModel extends Document {
   email: string;
   refreshToken: string | null;
   role: Role;
+  recoveryCodes: string[];
   comparePassword: (password: string) => Promise<boolean>;
+  mapped: () => Partial<User>;
 }
 
 export type User = UserModel;
@@ -44,6 +46,10 @@ const userSchema = new Schema({
     enum: Object.values(Role),
     default: Role.User,
   },
+  recoveryCodes: {
+    type: [String],
+    required: true,
+  },
 }, {
   timestamps: true,
   versionKey: false,
@@ -65,6 +71,16 @@ userSchema.pre("save", async function (next) {
 
 userSchema.methods.comparePassword = async function (password: string) {
   return await compare(password, this.password);
+};
+
+userSchema.methods.mapped = function () {
+  return {
+    id: this._id,
+    name: this.name,
+    lastname: this.lastname,
+    email: this.email,
+    role: this.role,
+  };
 };
 
 const User = model<UserModel>("User", userSchema);

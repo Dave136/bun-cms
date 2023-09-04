@@ -1,3 +1,4 @@
+import { toHex } from "../../utils/index.ts";
 import {
   AdminUserAlreadyExists,
   UserByEmailNotFound,
@@ -7,14 +8,21 @@ import UserModel, { Role, User } from "./model.ts";
 
 interface CreateUserDTO {
   name: string;
+  lastname: string;
   password: string;
   email: string;
   role: Role;
 }
 
-export async function createPassword(password: string): Promise<string> {
-  // TODO: encrypt password
-  return password;
+function generateRecoveryCodes() {
+  const recoveryCodes = [];
+
+  for (let i = 0; i < 10; i++) {
+    const code = crypto.getRandomValues(new Uint8Array(10));
+    recoveryCodes.push(toHex(code));
+  }
+
+  return recoveryCodes;
 }
 
 export async function getAll() {
@@ -35,8 +43,10 @@ export async function create(userDto: CreateUserDTO): Promise<User> {
   const user = new UserModel();
 
   user.name = userDto.name;
+  user.lastname = userDto.lastname;
   user.email = userDto.email;
-  user.password = await createPassword(userDto.password);
+  user.password = userDto.password;
+  user.recoveryCodes = generateRecoveryCodes();
   user.role = userDto.role as Role;
 
   await user.save();
