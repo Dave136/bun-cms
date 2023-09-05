@@ -1,5 +1,4 @@
 import { Hono } from "hono";
-import basicAuth, { BasicAuthError } from "./utils.ts";
 import * as authService from "./service.ts";
 import * as userService from "../user/services.ts";
 import httpResponse from "../../utils/http-response.ts";
@@ -15,33 +14,21 @@ route.post(
   "/login",
   async (c) => {
     try {
-      if (!c.req.headers.get("authorization")) {
-        return httpResponse.badRequest(c, "Missing Authorization Header");
+      const credentials = await c.req.json();
+
+      if (!credentials) {
+        return httpResponse.badRequest(c, "Missing credentials");
       }
 
-      const authorization = c.req.headers.get("authorization") as string;
-      const credentials = basicAuth(authorization);
       const {
         token,
-        refreshToken,
       } = await authService.authenticate(credentials);
-
-      c.res.headers.set("x-api-token", token);
-      c.res.headers.set("x-refresh-token", refreshToken);
 
       return httpResponse.ok(c, {
         token,
       });
     } catch (error) {
       console.error(error);
-
-      if (error instanceof BasicAuthError) {
-        return httpResponse.badRequestWithError(
-          c,
-          `Missing HTTP Header: "Authorization"`,
-          error,
-        );
-      }
 
       if (
         error instanceof UserByEmailNotFound ||

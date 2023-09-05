@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import * as consolesService from "./service.ts";
 import httpResponse from "../../utils/http-response.ts";
 import { ConsoleWithIDNotFound } from "./error.ts";
+import { verifyJWT } from "../../middlewares.ts";
 
 const route = new Hono();
 
@@ -45,7 +46,7 @@ route.get("/:id", async (c) => {
   }
 });
 
-route.post("/", async (c) => {
+route.post("/", verifyJWT, async (c) => {
   try {
     const body = await c.req.json();
     await consolesService.create(body);
@@ -59,7 +60,7 @@ route.post("/", async (c) => {
   }
 });
 
-route.put("/:id", async (c) => {
+route.put("/:id", verifyJWT, async (c) => {
   try {
     const id = c.req.param("id");
     const body = await c.req.json();
@@ -80,7 +81,7 @@ route.put("/:id", async (c) => {
   }
 });
 
-route.delete("/:id", async (c) => {
+route.delete("/:id", verifyJWT, async (c) => {
   try {
     const id = c.req.param("id");
 

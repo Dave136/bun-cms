@@ -12,26 +12,25 @@ export class BasicAuthError extends Error {
   }
 }
 
-const HTTP_BASIC = /^ *(?:Basic) +([A-Za-z0-9._~+/-]+=*) *$/;
+export class BearerAuthError extends Error {
+  constructor(message: string) {
+    super(message);
 
-export default function basicAuth(credentials: string): Credentials {
-  const parts = HTTP_BASIC.exec(credentials);
+    this.name = "BearerAuthError";
+    this.message = message;
+  }
+}
 
-  if (!parts || parts.length !== 2) {
-    throw new BasicAuthError('Inavlid "Authorization" header value provided');
+export function bearerAuth(authorization: string | null): string {
+  if (typeof authorization !== "string") {
+    throw new BearerAuthError("Invalid 'Authorization' header value provided");
   }
 
-  const [schema, token] = parts;
+  const parts = authorization.split(" ");
 
-  if (schema && token) {
-    const buff = atob(token).toString();
-    const [email, password] = buff.split(":");
-
-    return {
-      email,
-      password,
-    };
+  if (parts.length !== 2) {
+    throw new BearerAuthError("Invalid 'Authorization' header value provided");
   }
 
-  throw new BasicAuthError('Inavlid "Authorization" header value provided');
+  return parts[1];
 }
