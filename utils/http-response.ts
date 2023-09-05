@@ -56,10 +56,8 @@ export default {
       error: isDevelopment ? error : undefined,
     }, HttpStatus.InternalServerError);
   },
-  noContent(c: Context, message: string) {
-    return c.json({
-      message,
-    }, HttpStatus.NoContent);
+  noContent(c: Context) {
+    return c.status(HttpStatus.NoContent);
   },
   noContentWithError(c: Context, message: string, error?: Error) {
     return c.json({
@@ -78,7 +76,7 @@ export default {
       error: isDevelopment ? error : undefined,
     }, HttpStatus.NotFound);
   },
-  ok(c: Context, payload: Record<string, any>) {
+  ok(c: Context, payload: Record<string, unknown>) {
     return c.json(payload, HttpStatus.Ok);
   },
   okWithError(c: Context, message: string, error?: Error) {
