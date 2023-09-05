@@ -3,10 +3,12 @@ import { type Document, model, Schema } from "mongoose";
 export interface ConsoleMapped {
   id: string;
   name: string;
+  games: string[];
 }
 
 interface ConsoleModel extends Document {
   name: string;
+  games: string[];
   mapped: () => ConsoleMapped;
 }
 
@@ -17,6 +19,10 @@ const consoleSchema = new Schema({
     type: String,
     required: true,
   },
+  games: [{
+    type: Schema.Types.ObjectId,
+    ref: "Game",
+  }],
 }, {
   timestamps: true,
   versionKey: false,
