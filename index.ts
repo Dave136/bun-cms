@@ -30,6 +30,9 @@ app.use("/admin", async (c) => {
   }
 });
 
-app.get("/", (c) => c.json({ message: "Alfagames API - Dave136" }));
+app.get(
+  "/api",
+  (c) => c.json({ message: "Alfagames API", author: "David Arenas" }),
+);
 
 Deno.serve({ port: Number(PORT) || 3030 }, app.fetch);

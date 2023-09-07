@@ -8,6 +8,9 @@
     "bcrypt": "https://deno.land/x/bcrypt@v0.3.0/mod.ts"
   },
   "tasks": {
-    "dev": "deno run --allow-net --allow-env --allow-read --allow-sys --watch index.ts"
+    "dev:app": "deno task dev:ui & deno task dev:api",
+    "dev:api": "deno run --allow-net --allow-env --allow-read --allow-sys --watch index.ts",
+    "dev:ui": "cd ui && deno task dev",
+    "build:ui": "cd ui && deno task build"
   }
 }
