@@ -34,7 +34,11 @@ route.post(
         error instanceof UserByEmailNotFound ||
         error instanceof InvalidCredentials
       ) {
-        return httpResponse.forbiddenWithError(c, "Invalid Credentials", error);
+        return httpResponse.unauthorizedWithError(
+          c,
+          "Invalid Credentials",
+          error,
+        );
       }
 
       return httpResponse.internalServerError(c, error);
