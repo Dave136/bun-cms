@@ -74,8 +74,8 @@ export async function findByEmail(email: string): Promise<User> {
   return user;
 }
 
-export async function findByRole(role: Role): Promise<User[]> {
-  return await UserModel.find({ role });
+export async function findByRole(role: Role): Promise<User | null> {
+  return await UserModel.findOne({ role });
 }
 
 export async function refreshToken(

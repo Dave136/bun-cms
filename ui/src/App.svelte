@@ -7,6 +7,7 @@
   import AppTheme from "$lib/components/AppTheme.svelte";
   import routes from "./routes";
   import logo from "./assets/logo.svg";
+  import logoDark from "./assets/logo-dark.svg";
   import auth from "$lib/services/auth";
 
   let oldLocation = "";
@@ -29,14 +30,27 @@
 <div class="w-full flex min-h-screen">
   {#if $authenticated && showSidebar}
     <aside
-      class="z-[0] flex flex-col w-[.625rem] min-w-[6.2rem] max-w-[7rem] flex-shrink-0 flex-grow-0 overflow-x-hidden overflow-y-auto bg-primary/90 p-6 border-r border-black"
+      class="z-[0] flex flex-col w-[.625rem] min-w-[5.5rem] max-w-[6rem] flex-shrink-0 flex-grow-0 overflow-x-hidden overflow-y-auto bg-secondary p-6 border-r"
     >
       <a
-        class="relative align-top inline-flex items-center gap-2 text-xl select-none"
+        class="relative align-top inline-flex justify-center items-center gap-2 text-xl select-none"
         href="/"
         use:link
       >
-        <img src={logo} alt="Alfagames logo" width="40" height="40" />
+        <img
+          class="dark:hidden"
+          src={logoDark}
+          alt="Alfagame Logo"
+          width="40"
+          height="40"
+        />
+        <img
+          class="hidden dark:block"
+          src={logo}
+          alt="Alfagame Logo"
+          width="40"
+          height="40"
+        />
       </a>
 
       <nav
@@ -49,10 +63,10 @@
           use:link
           use:active={{
             path: "/collections/?.*",
-            className: "border-secondary",
+            className: "border-primary",
           }}
         >
-          <div class="i-ph-database text-3xl text-secondary" />
+          <div class="i-ph-database text-3xl text-primary" />
         </a>
       </nav>
 
@@ -60,7 +74,7 @@
         <DropdownMenu.Root>
           <DropdownMenu.Trigger>
             <button
-              class="w-12 h-12 rounded-full bg-secondary border-primary flex items-center justify-center"
+              class="w-10 h-10 rounded-full bg-secondary-foreground border-primary text-secondary text-sm flex items-center justify-center"
             >
               AG
             </button>

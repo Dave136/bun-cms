@@ -9,11 +9,7 @@ user.get("/check-admin", async (c) => {
   try {
     const admin = await service.findByRole(Role.Admin);
 
-    if (!admin) {
-      return httpResponse.notFound(c, "Admin not found");
-    }
-
-    return httpResponse.ok(c, { message: "Admin found" });
+    return httpResponse.ok(c, { adminExist: !!admin });
   } catch (error) {
     return httpResponse.internalServerError(c, error);
   }

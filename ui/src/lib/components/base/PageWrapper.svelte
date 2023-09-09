@@ -1,4 +1,7 @@
 <script lang="ts">
+  import { cn } from "$lib/utils";
+  import { fade } from "svelte/transition";
+
   export let center = false;
 
   let classes = "";
@@ -7,8 +10,9 @@
 
 <div
   class="flex flex-col flex-1 w-full overflow-x-hidden overflow-y-auto scrollbar-stable scroll-smoth {classes}"
+  transition:fade
 >
-  <main class={center ? "flex items-center" : ""}>
+  <main class={cn(center && "flex items-center")}>
     <slot />
   </main>
 

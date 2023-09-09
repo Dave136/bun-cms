@@ -1,12 +1,16 @@
 <script lang="ts">
   import logo from "../../assets/logo.png";
   import logoDark from "../../assets/logo-dark.svg";
+  import { fade } from "svelte/transition";
 
   export let title = "";
   export let description = "";
 </script>
 
-<div class="overflow-hidden container rounded-[0.5rem] bg-background mt-20">
+<div
+  class="overflow-hidden container rounded-[0.5rem] bg-background mt-20"
+  transition:fade
+>
   <div
     class="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-1 lg:px-0"
   >

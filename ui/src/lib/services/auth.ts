@@ -10,6 +10,22 @@ async function login(credentials: { email: string; password: string }) {
   }
 }
 
+async function registerAdmin(
+  payload: {
+    email: string;
+    password: string;
+    name: string;
+    lastname: string;
+  },
+): Promise<string> {
+  const { data } = await api.post("/auth/register", {
+    ...payload,
+    role: "admin",
+  });
+
+  return data?.codes || "";
+}
+
 async function logout() {
   // TODO: add logout endpoint
   // await api.post("/auth/logout");
@@ -21,4 +37,5 @@ async function logout() {
 export default {
   login,
   logout,
+  registerAdmin,
 };
