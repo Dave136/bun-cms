@@ -1,5 +1,6 @@
 <script lang="ts">
   import toast from "svelte-french-toast";
+  import { replace } from "svelte-spa-router";
   import { Button } from "$lib/components/ui/button";
   import { Input } from "$lib/components/ui/input";
   import { Label } from "$lib/components/ui/label";
@@ -7,14 +8,16 @@
   import { authenticated } from "../store";
   import auth from "$lib/services/auth";
   import type { ApiError } from "$lib/types";
-  import { replace } from "svelte-spa-router";
 
   let className: string | undefined | null = undefined;
   export { className as class };
 
   let isLoading = false;
+  let name = "";
+  let lastname = "";
   let email = "";
   let password = "";
+  let passwordConfirm = "";
 
   async function onSubmit() {
     try {
@@ -42,6 +45,32 @@
   <form on:submit|preventDefault={onSubmit}>
     <div class="grid gap-2">
       <div class="grid gap-1">
+        <Label class="sr-only" for="nombre">Nombre</Label>
+        <Input
+          id="nombre"
+          placeholder="john"
+          type="text"
+          autocapitalize="none"
+          autocomplete="off"
+          autocorrect="off"
+          bind:value={name}
+          disabled={isLoading}
+        />
+      </div>
+      <div class="grid gap-1">
+        <Label class="sr-only" for="lastname">Apellido</Label>
+        <Input
+          id="lastname"
+          placeholder="doe"
+          type="text"
+          autocapitalize="none"
+          autocomplete="off"
+          autocorrect="off"
+          bind:value={lastname}
+          disabled={isLoading}
+        />
+      </div>
+      <div class="grid gap-1">
         <Label class="sr-only" for="email">Email</Label>
         <Input
           id="email"
@@ -67,11 +96,25 @@
           bind:value={password}
         />
       </div>
+      <div class="grid gap-1">
+        <Label class="sr-only" for="passwordConfirm">Confirmar contraseña</Label
+        >
+        <Input
+          id="passwordConfirm"
+          placeholder="**********"
+          type="password"
+          autocapitalize="none"
+          autocomplete="off"
+          autocorrect="off"
+          disabled={isLoading}
+          bind:value={passwordConfirm}
+        />
+      </div>
       <Button disabled={isLoading}>
         {#if isLoading}
           <span class="i-ph-circle-notch-bold text-lg animate-spin mr-2" />
         {/if}
-        Iniciar sesión
+        Registrar e iniciar sesión
       </Button>
     </div>
   </form>

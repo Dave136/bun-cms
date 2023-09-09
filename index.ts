@@ -1,6 +1,6 @@
 import "dotenv";
 import { Hono } from "hono";
-import { cors } from "hono:middleware";
+import { cors, logger } from "hono:middleware";
 import initConnection from "./database.ts";
 import routes from "./routes.ts";
 import bindClient from "./client.ts";
@@ -12,6 +12,7 @@ const PORT = Deno.env.get("PORT");
 const app = new Hono();
 
 app.use("*", cors());
+app.use("*", logger());
 app.route("/api", routes);
 
 // Bind the client UI
