@@ -29,3 +29,19 @@ export class InvalidCredentials extends Error {
     this.name = "InvalidCredentials";
   }
 }
+
+export class InvalidRecoveryCodes extends Error {
+  constructor() {
+    super("Invalid recovery codes");
+
+    this.name = "InvalidRecoveryCodes";
+  }
+}
+
+export class InvalidRecoveryCodeFormat extends Error {
+  constructor() {
+    super("Invalid recovery code format");
+
+    this.name = "InvalidRecoveryCodeFormat";
+  }
+}

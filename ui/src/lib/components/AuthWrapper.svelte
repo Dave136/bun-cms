@@ -9,7 +9,7 @@
 
 <div
   class="overflow-hidden container rounded-[0.5rem] bg-background mt-20"
-  transition:fade
+  in:fade
 >
   <div
     class="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-1 lg:px-0"

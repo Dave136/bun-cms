@@ -73,6 +73,9 @@
         {/if}
         Iniciar sesión
       </Button>
+      <Button variant="link" on:click={() => replace("/forgot-password")}
+        >¿Has olvidado tu contraseña?</Button
+      >
     </div>
   </form>
   <!-- <div class="relative">

@@ -1,6 +1,8 @@
 import { toHex } from "../../utils/index.ts";
 import {
   AdminUserAlreadyExists,
+  InvalidRecoveryCodeFormat,
+  InvalidRecoveryCodes,
   UserByEmailNotFound,
   UserWithIDNotFound,
 } from "./error.ts";
@@ -23,6 +25,26 @@ function generateRecoveryCodes() {
   }
 
   return recoveryCodes;
+}
+
+export async function verifyRecoveryCodes(
+  { code, email }: { code: string; email: string },
+): Promise<boolean> {
+  const codes = code.split(".");
+
+  if (codes.length < 10) {
+    throw new InvalidRecoveryCodeFormat();
+  }
+
+  const user = await findByEmail(email);
+  const verified = codes.every((code) => user.recoveryCodes.includes(code));
+
+  if (!verified) {
+    throw new InvalidRecoveryCodes();
+  }
+
+  // compara los códigos de recuperación con los del usuario
+  return verified;
 }
 
 export async function getAll() {
@@ -99,4 +121,15 @@ export async function clearRefreshToken(email: string) {
   await user.save();
 
   return user;
+}
+
+export async function updatePassword(
+  email: string,
+  newPassword: string,
+): Promise<void> {
+  const user = await findByEmail(email);
+
+  user.password = newPassword;
+
+  await user.save();
 }

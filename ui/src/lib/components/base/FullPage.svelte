@@ -10,7 +10,7 @@
 
 <PageWrapper class="bg-backgrund/80 flex justify-start items-center" center>
   <div
-    class="container relative hidden h-[800px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-1 lg:px-0"
+    class="container relative hidden h-[800px] min-w-[400px] w-[400px] max-w-[400px] flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-1 lg:px-0"
   >
     <div class="lg:p-8">
       <div class="mx-auto flex w-full flex-col justify-center space-y-6">
