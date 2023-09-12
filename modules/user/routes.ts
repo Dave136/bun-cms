@@ -7,6 +7,8 @@ import {
   InvalidRecoveryCodes,
   UserByEmailNotFound,
 } from "./error.ts";
+import { generateResetPasswordToken } from "../auth/service.ts";
+import { verifyResetPasswordJWT } from "../../middlewares.ts";
 
 const route = new Hono();
 
@@ -32,12 +34,17 @@ route.post("/verify-codes", async (c) => {
     }
 
     await service.verifyRecoveryCodes(body);
+    const token = await generateResetPasswordToken(body.email);
 
     return httpResponse.ok(c, {
       message: "Recovery codes verified",
-      verified: true,
+      token,
     });
   } catch (error) {
+    if (error instanceof UserByEmailNotFound) {
+      return httpResponse.notFound(c, error.message);
+    }
+
     if (error instanceof InvalidRecoveryCodeFormat) {
       return httpResponse.badRequest(c, error.message);
     }
@@ -66,19 +73,9 @@ route.post("/exists", async (c) => {
   }
 });
 
-// TODO: Add middleware to validate the reset password token
-route.post("/reset-password", async (c) => {
+route.post("/reset-password", verifyResetPasswordJWT, async (c) => {
   try {
     const { email, newPassword } = await c.req.json();
-    const token = c.req.headers.get("X-Password-Reset-Token");
-
-    if (!token) {
-      return httpResponse.badRequest(c, "Missing reset token");
-    }
-
-    if (token !== "reset-token-value") {
-      return httpResponse.badRequest(c, "Invalid reset token");
-    }
 
     await service.updatePassword(email, newPassword);
 

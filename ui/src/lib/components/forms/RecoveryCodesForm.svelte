@@ -41,16 +41,19 @@
       }
 
       const email = atob(encodedEmail);
-      await user.verifyRecoveryCode({
+      const token = await user.verifyRecoveryCode({
         email,
         code,
       });
+
+      localStorage.setItem("ag-reset-token", token);
 
       toast.success("Código verificado");
 
       replace("/reset-password");
     } catch (err) {
       let error = err as ApiError;
+      console.log(err);
 
       if (error.status === 400) {
         toast.error("El código de recuperación es inválido");

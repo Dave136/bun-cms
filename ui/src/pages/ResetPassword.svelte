@@ -60,6 +60,7 @@
 
       if (!encodedEmail) {
         localStorage.removeItem("ag-user");
+        localStorage.removeItem("ag-reset-token");
         return replace("/forgot-password");
       }
 
@@ -67,10 +68,8 @@
 
       await user.resetPassword(email, newPassword);
       toast.success("Contraseña reestablecida");
-      toast.custom("Inicie sesión");
+      toast.success("Por favor, inicie sesión");
 
-      // This is not util anymore
-      localStorage.removeItem("ag-user");
       replace("/");
     } catch (err) {
       let error = err as ApiError;
@@ -83,6 +82,10 @@
 
       toast.error("Ocurrió un error, intente de nuevo");
     } finally {
+      // These are not util anymore
+      localStorage.removeItem("ag-user");
+      localStorage.removeItem("ag-reset-token");
+
       isLoading = false;
     }
   }

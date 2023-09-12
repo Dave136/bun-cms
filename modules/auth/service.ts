@@ -23,12 +23,24 @@ export type Tokens = {
 };
 
 const jwtPrivateKey = new TextEncoder().encode(Deno.env.get("JWT_PRIVATE_KEY"));
+const jwtResetPasswordPrivateKey = new TextEncoder().encode(
+  Deno.env.get("RESET_PASSWORD_PRIVATE_KEY"),
+);
 
 async function signToken(user: User): Promise<string> {
   const signed = await new SignJWT({ email: user.email })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime(Deno.env.get("JWT_EXPIRATION") ?? "15min")
     .sign(jwtPrivateKey);
+
+  return signed;
+}
+
+async function signPasswordResetToken(user: Partial<User>): Promise<string> {
+  const signed = await new SignJWT({ email: user.email })
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime(Deno.env.get("JWT_RESET_PASSWORD_EXPIRATION") as string)
+    .sign(jwtResetPasswordPrivateKey);
 
   return signed;
 }
@@ -47,6 +59,11 @@ async function generateTokens(user: User): Promise<[string, string]> {
   const refreshToken = await signRefreshToken(user);
 
   return [token, refreshToken];
+}
+
+export async function generateResetPasswordToken(email: string) {
+  const token = await signPasswordResetToken({ email });
+  return token;
 }
 
 export async function authenticate({ email, password }: Credentials) {
