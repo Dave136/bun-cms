@@ -7,6 +7,7 @@ import {
   InvalidCredentials,
   UserByEmailNotFound,
 } from "../user/error.ts";
+import { verifyJWT } from "../../middlewares.ts";
 
 const route = new Hono();
 

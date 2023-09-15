@@ -5,9 +5,18 @@ import Index from "./pages/index.svelte";
 import Collections from "./pages/collections.svelte";
 import ForgotPassword from "./pages/ForgotPassword.svelte";
 import ResetPassword from "./pages/ResetPassword.svelte";
+import { isTokenExpired } from "./lib/jwt.ts";
+import { authenticated } from "./lib/store.ts";
 
-function checkAuthToken() {
-  if (!localStorage.getItem("ag-token")) {
+function isValid() {
+  const token = localStorage.getItem("ag-token");
+  const valid = !isTokenExpired(token ?? "");
+
+  console.log(token, valid);
+
+  if (!token || !valid) {
+    localStorage.removeItem("ag-token");
+    authenticated.set(false);
     return false;
   }
 
@@ -17,22 +26,22 @@ function checkAuthToken() {
 const routes = {
   "/login": wrap({
     component: Login as any,
-    conditions: () => !checkAuthToken(),
+    conditions: () => !isValid(),
     userData: { showSidebar: false },
   }),
   "/forgot-password": wrap({
     component: ForgotPassword as any,
-    conditions: () => !checkAuthToken(),
+    conditions: () => !isValid(),
     userData: { showSidebar: false },
   }),
   "/reset-password": wrap({
     component: ResetPassword as any,
-    conditions: () => !checkAuthToken(),
+    conditions: () => !isValid(),
     userData: { showSidebar: false },
   }),
   "/collections": wrap({
     component: Collections as any,
-    conditions: () => checkAuthToken(),
+    conditions: () => isValid(),
     userData: { showSidebar: true },
   }),
   // catch-all fallback
