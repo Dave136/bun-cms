@@ -10,8 +10,6 @@ function isValid() {
   const token = localStorage.getItem("ag-token");
   const valid = !isTokenExpired(token ?? "");
 
-  console.log(token, valid);
-
   if (!token || !valid) {
     localStorage.removeItem("ag-token");
     authenticated.set(false);
@@ -28,12 +26,12 @@ const routes = {
     userData: { showSidebar: false },
   }),
   "/forgot-password": wrap({
-    component: () => import("./pages/ForgotPassword.svelte"),
+    asyncComponent: () => import("./pages/ForgotPassword.svelte"),
     conditions: () => !isValid(),
     userData: { showSidebar: false },
   }),
   "/reset-password": wrap({
-    component: () => import("./pages/ResetPassword.svelte"),
+    asyncComponent: () => import("./pages/ResetPassword.svelte"),
     conditions: () => !isValid(),
     userData: { showSidebar: false },
   }),
