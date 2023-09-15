@@ -97,7 +97,7 @@
     </aside>
   {/if}
   <div
-    class="flex-grow h-full flex items-stretch {$authenticated
+    class="flex-grow min-h-full flex items-stretch {$authenticated
       ? 'min-w-[650px]'
       : 'min-w-0'}"
   >

@@ -32,7 +32,7 @@ route.get("/:id", async (c) => {
     const result = await gamesService.findById(id);
 
     return httpResponse.created(c, {
-      data: result.mapped(),
+      data: result,
     });
   } catch (error) {
     if (error instanceof GameWithIDNotFound) {
