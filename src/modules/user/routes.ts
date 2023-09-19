@@ -91,13 +91,10 @@ route.post("/reset-password", verifyResetPasswordJWT, async (c) => {
   }
 });
 
-route.post(
-  "/:id",
-  (c) => {
-    return c.json({
-      message: "ok",
-    });
-  },
-);
+route.post("/:id", (c) => {
+  return c.json({
+    message: "ok",
+  });
+});
 
 export default route;

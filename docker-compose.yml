@@ -1,14 +1,26 @@
-version: "3.1"
-
 services:
-  mongodb:
+  app:
+    container_name: app
+    build: .
+    ports:
+      - 5000:5000
+    volumes:
+      - .:/app
+    depends_on:
+      - database
+    links:
+      - database
+
+  database:
+    container_name: database
     image: mongo:latest
+    restart: always
     ports:
       - 27017:27017
     volumes:
-      - ./data:/data/db
+      - database:/data/db
     env_file:
-      - .env
+      - .env.development
 
 volumes:
-  mongodb:
+  database:

@@ -6,7 +6,7 @@ export interface CreateConsoleDTO {
   name: string;
 }
 
-export async function getAll() {
+export async function getAll(): Promise<IConsole[]> {
   return await ConsoleModel.find().populate("games");
 }
 

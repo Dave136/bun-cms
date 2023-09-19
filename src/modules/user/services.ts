@@ -27,9 +27,13 @@ function generateRecoveryCodes() {
   return recoveryCodes;
 }
 
-export async function verifyRecoveryCodes(
-  { code, email }: { code: string; email: string },
-): Promise<boolean> {
+export async function verifyRecoveryCodes({
+  code,
+  email,
+}: {
+  code: string;
+  email: string;
+}): Promise<boolean> {
   const codes = code.split(".");
 
   if (codes.length < 10) {
@@ -47,7 +51,7 @@ export async function verifyRecoveryCodes(
   return verified;
 }
 
-export async function getAll() {
+export async function getAll(): Promise<User[]> {
   return await UserModel.find();
 }
 
@@ -102,7 +106,7 @@ export async function findByRole(role: Role): Promise<User | null> {
 
 export async function refreshToken(
   email: string,
-  token: string,
+  token: string
 ): Promise<User> {
   const user = await findByEmail(email);
 
@@ -113,19 +117,17 @@ export async function refreshToken(
   return user;
 }
 
-export async function clearRefreshToken(email: string) {
+export async function clearRefreshToken(email: string): Promise<void> {
   const user = await findByEmail(email);
 
   user.refreshToken = null;
 
   await user.save();
-
-  return user;
 }
 
 export async function updatePassword(
   email: string,
-  newPassword: string,
+  newPassword: string
 ): Promise<void> {
   const user = await findByEmail(email);
 

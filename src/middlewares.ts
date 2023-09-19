@@ -3,9 +3,9 @@ import httpResponse from "./utils/http-response.ts";
 import { bearerAuth, BearerAuthError } from "./modules/auth/utils.ts";
 import { errors, jwtVerify } from "jose";
 
-const jwtPrivateKey = new TextEncoder().encode(Deno.env.get("JWT_PRIVATE_KEY"));
+const jwtPrivateKey = new TextEncoder().encode(process.env.JWT_PRIVATE_KEY);
 const jwtResetPasswordPrivateKey = new TextEncoder().encode(
-  Deno.env.get("RESET_PASSWORD_PRIVATE_KEY"),
+  process.env.RESET_PASSWORD_PRIVATE_KEY
 );
 
 export async function verifyJWT(c: Context, next: Next) {

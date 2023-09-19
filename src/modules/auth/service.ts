@@ -22,15 +22,18 @@ export type Tokens = {
   refreshToken: string;
 };
 
-const jwtPrivateKey = new TextEncoder().encode(Deno.env.get("JWT_PRIVATE_KEY"));
+const jwtPrivateKey = new TextEncoder().encode(process.env.JWT_PRIVATE_KEY);
 const jwtResetPasswordPrivateKey = new TextEncoder().encode(
-  Deno.env.get("RESET_PASSWORD_PRIVATE_KEY"),
+  process.env.RESET_PASSWORD_PRIVATE_KEY
 );
+const jwtExpiration = process.env.JWT_EXPIRATION;
+const jwtResetPasswordExpiration = process.env.JWT_RESET_PASSWORD_EXPIRATION;
+const jwtRefreshTokenExpiration = process.env.JWT_REFRESH_TOKEN_EXPIRATION;
 
 async function signToken(user: User): Promise<string> {
   const signed = await new SignJWT({ email: user.email })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime(Deno.env.get("JWT_EXPIRATION") ?? "15min")
+    .setExpirationTime(jwtExpiration || "15min")
     .sign(jwtPrivateKey);
 
   return signed;
@@ -39,7 +42,7 @@ async function signToken(user: User): Promise<string> {
 async function signPasswordResetToken(user: Partial<User>): Promise<string> {
   const signed = await new SignJWT({ email: user.email })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime(Deno.env.get("JWT_RESET_PASSWORD_EXPIRATION") as string)
+    .setExpirationTime(jwtResetPasswordExpiration as string)
     .sign(jwtResetPasswordPrivateKey);
 
   return signed;
@@ -48,7 +51,7 @@ async function signPasswordResetToken(user: Partial<User>): Promise<string> {
 async function signRefreshToken(user: User): Promise<string> {
   const signed = await new SignJWT({ email: user.email })
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime(Deno.env.get("JWT_REFRESH_TOKEN_EXPIRATION") ?? "1d")
+    .setExpirationTime(jwtRefreshTokenExpiration || "1d")
     .sign(jwtPrivateKey);
 
   return signed;
@@ -90,10 +93,7 @@ export async function register(dto: RegisterDTO): Promise<void> {
 }
 
 export async function refreshToken(refreshToken: string): Promise<string> {
-  const { payload } = await jwtVerify(
-    refreshToken,
-    jwtPrivateKey,
-  );
+  const { payload } = await jwtVerify(refreshToken, jwtPrivateKey);
 
   const user = await userService.findByEmail(payload.email as string);
 

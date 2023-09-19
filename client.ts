@@ -1,9 +1,9 @@
 import { Hono } from "hono";
-import { serveStatic } from "hono:middleware";
+import { serveStatic } from "hono/bun";
 
 const ASSETS_ROUTE = "/_/assets/*";
 const ADMIN_ROUTE = "/_/*";
-const CLIENT_BUILD = "./ui/dist";
+const CLIENT_BUILD = "dist";
 
 const rewriteRequestPath = (path: string) => path.replace("/_/", "");
 
@@ -13,7 +13,7 @@ export default function bindClient(app: Hono) {
     serveStatic({
       root: CLIENT_BUILD,
       rewriteRequestPath,
-    }),
+    })
   );
 
   app.use(
@@ -21,6 +21,6 @@ export default function bindClient(app: Hono) {
     serveStatic({
       root: CLIENT_BUILD,
       rewriteRequestPath,
-    }),
+    })
   );
 }

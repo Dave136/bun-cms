@@ -1,5 +1,5 @@
 import { Hono } from "hono";
-import { auth, consolesRoutes, games, user } from "./modules/index.ts";
+import { auth, consolesRoutes, games, user } from "./modules";
 
 const routes = new Hono();
 

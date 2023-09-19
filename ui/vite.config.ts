@@ -4,21 +4,18 @@ import { resolve } from "node:path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "./",
   plugins: [
     svelte({
       preprocess: [vitePreprocess()],
     }),
   ],
-  base: "./",
   resolve: {
     alias: {
       $lib: resolve("./src/lib"),
     },
   },
   build: {
-    watch: {
-      include: "src/**",
-      exclude: "node_modules/**",
-    },
+    outDir: "../dist",
   },
 });

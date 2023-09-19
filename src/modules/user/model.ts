@@ -1,5 +1,4 @@
 import { type Document, model, Schema } from "mongoose";
-import { compare, genSalt, hash } from "bcrypt";
 
 export enum Role {
   Admin = "admin",
@@ -21,39 +20,42 @@ interface UserModel extends Document {
 
 export type User = UserModel;
 
-const userSchema = new Schema({
-  name: {
-    type: String,
-    required: true,
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    lastname: {
+      type: String,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    refreshToken: {
+      type: String,
+    },
+    role: {
+      type: String,
+      enum: Object.values(Role),
+      default: Role.User,
+    },
+    recoveryCodes: {
+      type: [String],
+      required: true,
+    },
   },
-  lastname: {
-    type: String,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  refreshToken: {
-    type: String,
-  },
-  role: {
-    type: String,
-    enum: Object.values(Role),
-    default: Role.User,
-  },
-  recoveryCodes: {
-    type: [String],
-    required: true,
-  },
-}, {
-  timestamps: true,
-  versionKey: false,
-});
+  {
+    timestamps: true,
+    versionKey: false,
+  }
+);
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
@@ -61,16 +63,15 @@ userSchema.pre("save", async function (next) {
   }
 
   try {
-    const salt = await genSalt(10);
-    this.password = await hash(this.password, salt);
+    this.password = await Bun.password.hash(this.password);
     next();
   } catch (error) {
-    return next(error);
+    throw new Error(error as string);
   }
 });
 
 userSchema.methods.comparePassword = async function (password: string) {
-  return await compare(password, this.password);
+  return await Bun.password.verify(password, this.password);
 };
 
 userSchema.methods.mapped = function () {

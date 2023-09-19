@@ -11,7 +11,7 @@ export interface CreateGameDTO {
   consoleId: string;
 }
 
-export async function getAll() {
+export async function getAll(): Promise<IGame[]> {
   return await GameModel.find();
 }
 
