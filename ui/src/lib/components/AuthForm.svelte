@@ -30,6 +30,8 @@
         return toast.error("Credenciales incorrectas");
       }
 
+      console.log(err);
+
       toast.error("Ocurrió un error, intente de nuevo");
     } finally {
       isLoading = false;

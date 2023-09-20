@@ -13,7 +13,7 @@
       { name: "games", icon: "i-ph-game-controller" },
     ];
 
-    const promises = collectionsGroup.map(({ name }) => api.get(`/${name}`));
+    const promises = collectionsGroup.map(({ name }) => api(`/${name}`));
     Promise.all(promises).then((response) => {
       let items: Record<string, string>[] = [];
       response.forEach((res) => {

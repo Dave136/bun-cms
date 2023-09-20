@@ -1,1 +1,1 @@
-export { default as user } from "./users.ts";
+export { default as user } from "./users";

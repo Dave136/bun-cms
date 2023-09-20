@@ -32,6 +32,7 @@
         replace("/login");
       }
     } catch (error) {
+      console.log(error);
       toast.error("Un error ocurrió al cargar el sitio, reinicie la página");
     }
   }

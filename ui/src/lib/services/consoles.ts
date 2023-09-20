@@ -1,4 +1,4 @@
-import { api } from "../config/redaxios.ts";
+import { api } from "../config/redaxios";
 
 type ActionConsolePayload = {
   name: string;
@@ -14,7 +14,9 @@ export interface VideoConsole {
 
 async function getAll(): Promise<VideoConsole[]> {
   try {
-    const { data: { data } } = await api.get("/consoles");
+    const {
+      data: { data },
+    } = await api("/consoles");
     return data;
   } catch (error) {
     throw error;
@@ -23,7 +25,10 @@ async function getAll(): Promise<VideoConsole[]> {
 
 async function create(data: ActionConsolePayload) {
   try {
-    await api.post("/consoles", data);
+    await api("/consoles", {
+      method: "post",
+      body: data,
+    });
   } catch (error) {
     throw error;
   }
@@ -31,7 +36,10 @@ async function create(data: ActionConsolePayload) {
 
 async function update(id: string, data: ActionConsolePayload) {
   try {
-    await api.put(`/consoles/${id}`, data);
+    await api(`/consoles/${id}`, {
+      method: "put",
+      body: data,
+    });
   } catch (error) {
     throw error;
   }
@@ -39,7 +47,9 @@ async function update(id: string, data: ActionConsolePayload) {
 
 async function remove(id: string) {
   try {
-    await api.delete(`/consoles/${id}`);
+    await api(`/consoles/${id}`, {
+      method: "delete",
+    });
   } catch (error) {
     throw error;
   }

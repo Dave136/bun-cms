@@ -1,6 +1,15 @@
-import redaxios from "redaxios";
+import { ofetch } from "ofetch";
 
-export const api = redaxios.create({
+// export const api = redaxios.create({
+//   baseURL: "http://localhost:5000/api",
+//   headers: {
+//     "Content-Type": "application/json",
+//     Accept: "application/json",
+//     Authorization: "Bearer " + localStorage.getItem("ag-token"),
+//   },
+// });
+
+export const api = ofetch.create({
   baseURL: "http://localhost:5000/api",
   headers: {
     "Content-Type": "application/json",

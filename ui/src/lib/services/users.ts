@@ -2,18 +2,22 @@ import { api } from "$lib/config/redaxios";
 
 async function adminExists() {
   try {
-    const { data } = await api.get("/users/check-admin");
+    const data = await api("/users/check-admin");
     return data.adminExist;
   } catch (error) {
     throw error;
   }
 }
 
-async function verifyRecoveryCode(
-  payload: { code: string; email: string },
-): Promise<string> {
+async function verifyRecoveryCode(payload: {
+  code: string;
+  email: string;
+}): Promise<string> {
   try {
-    const { data } = await api.post("/users/verify-codes", payload);
+    const data = await api("/users/verify-codes", {
+      method: "post",
+      body: payload,
+    });
     return data.token;
   } catch (error) {
     throw error;
@@ -22,7 +26,12 @@ async function verifyRecoveryCode(
 
 async function userExists(email: string) {
   try {
-    const { data } = await api.post(`/users/exists`, { email });
+    const data = await api(`/users/exists`, {
+      method: "post",
+      body: {
+        email,
+      },
+    });
     return data.message;
   } catch (error) {
     throw error;
@@ -37,7 +46,11 @@ async function resetPassword(email: string, newPassword: string) {
       throw new Error("An error occurred when attempting to reset password");
     }
 
-    await api.post(`/users/reset-password`, { email, newPassword }, {
+    await api(`/users/reset-password`, {
+      body: {
+        email,
+        newPassword,
+      },
       headers: {
         "X-Password-Reset-Token": resetToken,
       },

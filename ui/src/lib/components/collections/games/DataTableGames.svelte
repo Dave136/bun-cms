@@ -188,8 +188,8 @@
   onMount(async () => {
     try {
       isLoading = true;
-      const { data: response } = await api.get<{ data: Games[] }>("/games");
-      $games = response.data;
+      const { data } = await api<{ data: Games[] }>("/games");
+      $games = data;
     } catch (error) {
       toast.error("Hubo un error al cargar los datos");
     } finally {
