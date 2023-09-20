@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "dev": "bun --hot src/index.ts"
+    "dev": "bun --hot src/index.ts",
+    "dev:client": "cd ui && bun run dev"
   },
   "devDependencies": {
     "bun-types": "latest"
