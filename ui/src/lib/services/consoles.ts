@@ -1,4 +1,4 @@
-import { api } from "../config/redaxios";
+import { api } from "$lib/config/api";
 
 type ActionConsolePayload = {
   name: string;

@@ -1,4 +1,4 @@
-import { api } from "$lib/config/redaxios";
+import { api } from "$lib/config/api";
 import { authenticated } from "$lib/store";
 import { replace } from "svelte-spa-router";
 

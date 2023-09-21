@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { api } from "$lib/config/redaxios";
+  import { api } from "$lib/config/api";
   import { activeCollection, collections } from "$lib/store/collections";
   import { cn } from "$lib/utils";
   import { onMount } from "svelte";

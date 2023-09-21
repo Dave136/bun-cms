@@ -22,7 +22,7 @@
   import DataTableCheckbox from "$lib/components/ui/data-table/data-table-checkbox.svelte";
   import { onMount } from "svelte";
   import toast from "svelte-french-toast";
-  import { api } from "$lib/config/redaxios";
+  import { api } from "$lib/config/api";
   import { fade } from "svelte/transition";
 
   let games: Writable<Games[]> = writable([]);

@@ -1,4 +1,4 @@
-import { api } from "$lib/config/redaxios";
+import { api } from "$lib/config/api";
 
 async function adminExists() {
   try {
