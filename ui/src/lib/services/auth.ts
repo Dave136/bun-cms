@@ -30,6 +30,14 @@ async function registerAdmin(payload: {
   return data?.codes || "";
 }
 
+async function refresh(): Promise<string> {
+  const data = await api("/auth/refresh", {
+    method: "post",
+  });
+
+  return data.token;
+}
+
 async function logout() {
   // TODO: add logout endpoint
   // await api("/auth/logout", { method: 'post' });
@@ -41,5 +49,6 @@ async function logout() {
 export default {
   login,
   logout,
+  refresh,
   registerAdmin,
 };
