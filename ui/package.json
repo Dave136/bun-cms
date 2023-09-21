@@ -33,7 +33,6 @@
     "clsx": "^2.0.0",
     "felte": "^1.2.12",
     "filedrop-svelte": "^0.1.2",
-    "redaxios": "^0.5.1",
     "svelte-french-toast": "^1.2.0",
     "svelte-headless-table": "^0.17.5",
     "tailwind-merge": "^1.14.0",
