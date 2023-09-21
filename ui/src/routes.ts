@@ -3,14 +3,12 @@ import { wrap } from "svelte-spa-router/wrap";
 import Login from "./pages/login.svelte";
 import Index from "./pages/index.svelte";
 import Collections from "./pages/Collections.svelte";
-import { isTokenExpired } from "./lib/jwt.ts";
-import { authenticated } from "./lib/store.ts";
+import { authenticated } from "./lib/store";
 
 function isValid() {
   const token = localStorage.getItem("ag-token");
-  const valid = !isTokenExpired(token ?? "");
 
-  if (!token || !valid) {
+  if (!token) {
     localStorage.removeItem("ag-token");
     authenticated.set(false);
     return false;
