@@ -243,32 +243,43 @@
         {/each}
       </Table.Header>
       <Table.Body {...$tableBodyAttrs}>
-        {#each $pageRows as row (row.id)}
-          <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-            <Table.Row
-              {...rowAttrs}
-              data-state={$selectedDataIds[row.id] && "selected"}
-            >
-              {#each row.cells as cell (cell.id)}
-                <Subscribe attrs={cell.attrs()} let:attrs>
-                  <Table.Cell class="[&:has([role=checkbox])]:pl-3" {...attrs}>
-                    {#if cell.id === "amount"}
-                      <div class="text-right font-medium">
+        {#if $pageRows.length}
+          {#each $pageRows as row (row.id)}
+            <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
+              <Table.Row
+                {...rowAttrs}
+                data-state={$selectedDataIds[row.id] && "selected"}
+              >
+                {#each row.cells as cell (cell.id)}
+                  <Subscribe attrs={cell.attrs()} let:attrs>
+                    <Table.Cell
+                      class="[&:has([role=checkbox])]:pl-3"
+                      {...attrs}
+                    >
+                      {#if cell.id === "amount"}
+                        <div class="text-right font-medium">
+                          <Render of={cell.render()} />
+                        </div>
+                      {:else if cell.id === "status"}
+                        <div class="capitalize">
+                          <Render of={cell.render()} />
+                        </div>
+                      {:else}
                         <Render of={cell.render()} />
-                      </div>
-                    {:else if cell.id === "status"}
-                      <div class="capitalize">
-                        <Render of={cell.render()} />
-                      </div>
-                    {:else}
-                      <Render of={cell.render()} />
-                    {/if}
-                  </Table.Cell>
-                </Subscribe>
-              {/each}
-            </Table.Row>
-          </Subscribe>
-        {/each}
+                      {/if}
+                    </Table.Cell>
+                  </Subscribe>
+                {/each}
+              </Table.Row>
+            </Subscribe>
+          {/each}
+        {:else}
+          <Table.Row>
+            <Table.Cell colspan={5}>
+              <p class="text-center">No hay registros</p>
+            </Table.Cell>
+          </Table.Row>
+        {/if}
       </Table.Body>
     </Table.Root>
   </div>
