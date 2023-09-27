@@ -1,6 +1,6 @@
 <script lang="ts">
   import Router, { replace, link } from "svelte-spa-router";
-  import { Toaster } from "svelte-french-toast";
+  import toast, { Toaster } from "svelte-french-toast";
   import active from "svelte-spa-router/active";
   import { authenticated } from "$lib/store";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
@@ -9,11 +9,34 @@
   import logo from "./assets/logo.svg";
   import logoDark from "./assets/logo-dark.svg";
   import auth from "$lib/services/auth";
+  import { isTokenExpired } from "$lib/jwt";
 
   let oldLocation = "";
   let showSidebar = false;
 
+  async function refresh() {
+    const token = localStorage.getItem("ag-token");
+    const isTokenInvalid = isTokenExpired(token);
+
+    if (!token || !isTokenInvalid) return;
+
+    try {
+      localStorage.removeItem("ag-token");
+      const newToken = await auth.refresh();
+
+      localStorage.setItem("ag-token", newToken);
+      $authenticated = true;
+      replace("/collections");
+    } catch (error) {
+      console.log(error);
+      toast.error("Por favor vuelva a iniciar sesión");
+      replace("/login");
+    }
+  }
+
   function handleRouteLoading(e: any) {
+    refresh();
+
     if (e?.detail?.location === oldLocation) {
       return;
     }
@@ -22,7 +45,7 @@
     showSidebar = !!e.detail.userData.showSidebar;
   }
 
-  function handleRouteFailure() {
+  function handleRouteFailure(e) {
     replace("/");
   }
 </script>

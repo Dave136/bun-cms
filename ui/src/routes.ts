@@ -5,8 +5,8 @@ import Index from "./pages/index.svelte";
 import Collections from "./pages/Collections.svelte";
 import { authenticated } from "./lib/store";
 
-function isValid() {
-  const token = localStorage.getItem("ag-token");
+function meetConditions() {
+  const token = localStorage.getItem("ag-token") ?? "";
 
   if (!token) {
     localStorage.removeItem("ag-token");
@@ -20,22 +20,22 @@ function isValid() {
 const routes = {
   "/login": wrap({
     component: Login as any,
-    conditions: () => !isValid(),
+    conditions: [() => !meetConditions()],
     userData: { showSidebar: false },
   }),
   "/forgot-password": wrap({
     asyncComponent: () => import("./pages/ForgotPassword.svelte"),
-    conditions: () => !isValid(),
+    conditions: [() => !meetConditions()],
     userData: { showSidebar: false },
   }),
   "/reset-password": wrap({
     asyncComponent: () => import("./pages/ResetPassword.svelte"),
-    conditions: () => !isValid(),
+    conditions: [() => !meetConditions()],
     userData: { showSidebar: false },
   }),
   "/collections": wrap({
     component: Collections as any,
-    conditions: () => isValid(),
+    conditions: [() => meetConditions()],
     userData: { showSidebar: true },
   }),
   // catch-all fallback
