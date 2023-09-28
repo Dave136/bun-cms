@@ -35,14 +35,14 @@
   }
 
   function handleRouteLoading(e: any) {
-    refresh();
-
     if (e?.detail?.location === oldLocation) {
       return;
     }
 
     oldLocation = e.detail.location;
     showSidebar = !!e.detail.userData.showSidebar;
+
+    refresh();
   }
 
   function handleRouteFailure(e) {

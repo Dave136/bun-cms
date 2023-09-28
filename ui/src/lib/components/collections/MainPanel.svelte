@@ -12,6 +12,7 @@
   import * as AlertDialog from "$lib/components/ui/alert-dialog";
   import { cn } from "$lib/utils";
   import { buttonVariants } from "../ui/button";
+  import VideoConsoles from "./video-consoles/VideoConsoles.svelte";
 
   let sheetMode: "create" | "edit" | "delete" = "create";
   let name = "";
@@ -172,11 +173,12 @@
     </Button>
   </header>
   {#if section === "consoles"}
-    <DataTable
+    <VideoConsoles on:add={handleCreate} />
+    <!-- <DataTable
       on:update={handleUpdate}
       on:add={handleCreate}
       on:remove={handleDelete}
-    />
+    /> -->
   {:else if section === "games"}
     <DataTableGames />
   {/if}

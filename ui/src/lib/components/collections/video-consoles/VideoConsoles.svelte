@@ -1,183 +1,14 @@
 <script lang="ts">
-  import {
-    createTable,
-    Subscribe,
-    Render,
-    createRender,
-  } from "svelte-headless-table";
-  import {
-    addSortBy,
-    addPagination,
-    addTableFilter,
-    addSelectedRows,
-    addHiddenColumns,
-  } from "svelte-headless-table/plugins";
-  import * as Table from "$lib/components/ui/table";
-  import Actions from "../ui/data-table/data-table-actions.svelte";
-  import { Button } from "$lib/components/ui/button";
+  import Button from "$lib/components/ui/button/button.svelte";
+  import Input from "$lib/components/ui/input/input.svelte";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-  import { cn } from "$lib/utils";
-  import { Input } from "$lib/components/ui/input";
-  import DataTableCheckbox from "../ui/data-table/data-table-checkbox.svelte";
-  import { createEventDispatcher, onMount } from "svelte";
-  import toast from "svelte-french-toast";
-  import { fade } from "svelte/transition";
-  import { loadVideoConsoles, videoConsole } from "$lib/store/video-consoles";
+  import { videoConsole } from "$lib/store/video-consoles";
+  import { createEventDispatcher } from "svelte";
+  import { writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
 
-  let isLoading = false;
-
-  $videoConsole = [
-    {
-      _id: "123213123",
-      games: [],
-      name: "",
-      createdAt: "",
-      updatedAt: "",
-    },
-  ];
-
-  const table = createTable(videoConsole, {
-    sort: addSortBy({ disableMultiSort: true }),
-    page: addPagination(),
-    filter: addTableFilter({
-      fn: ({ filterValue, value }) => value.includes(filterValue),
-    }),
-    select: addSelectedRows(),
-    hide: addHiddenColumns(),
-  });
-
-  const columns = table.createColumns([
-    table.column({
-      header: (_, { pluginStates }) => {
-        const { allPageRowsSelected } = pluginStates.select;
-        return createRender(DataTableCheckbox, {
-          checked: allPageRowsSelected,
-        });
-      },
-      accessor: "_id",
-      cell: ({ row }, { pluginStates }) => {
-        const { getRowState } = pluginStates.select;
-        const { isSelected } = getRowState(row);
-
-        return createRender(DataTableCheckbox, {
-          checked: isSelected,
-        });
-      },
-      plugins: {
-        sort: {
-          disable: true,
-        },
-        filter: {
-          exclude: true,
-        },
-      },
-    }),
-    table.column({
-      header: "Nombre",
-      accessor: "name",
-      plugins: {
-        filter: {
-          getFilterValue(value) {
-            return value.toLowerCase();
-          },
-        },
-      },
-    }),
-    table.column({
-      header: "Fecha de creación",
-      accessor: "createdAt",
-      cell: ({ value }) => value.toLowerCase(),
-      // plugins: {
-      //   filter: {
-      //     getFilterValue(value) {
-      //       return value.toLowerCase();
-      //     },
-      //   },
-      // },
-    }),
-    table.column({
-      header: "Fecha de actualización",
-      accessor: "updatedAt",
-      cell: ({ value }) => {
-        // const formatted = new Intl.NumberFormat("en-US", {
-        //   style: "currency",
-        //   currency: "USD",
-        // }).format(value);
-        // return formatted;
-        return value;
-      },
-      // plugins: {
-      //   sort: {
-      //     disable: true,
-      //   },
-      //   filter: {
-      //     exclude: true,
-      //   },
-      // },
-    }),
-    table.column({
-      header: "",
-      accessor: ({ _id }) => _id,
-      cell: (item) => {
-        return createRender(Actions, { id: item.value })
-          .on("update", () => {
-            dispatch("update", {
-              id: item.value,
-            });
-          })
-          .on("delete", () => {
-            dispatch("remove", {
-              id: item.value,
-            });
-          });
-      },
-      plugins: {
-        sort: {
-          disable: true,
-        },
-      },
-    }),
-  ]);
-
-  const {
-    headerRows,
-    pageRows,
-    tableAttrs,
-    tableBodyAttrs,
-    flatColumns,
-    pluginStates,
-    rows,
-  } = table.createViewModel(columns);
-
-  const { sortKeys } = pluginStates.sort;
-
-  const { hiddenColumnIds } = pluginStates.hide;
-  const ids = flatColumns.map((c) => c.id);
-  let hideForId = Object.fromEntries(ids.map((id) => [id, true]));
-
-  $: $hiddenColumnIds = Object.entries(hideForId)
-    .filter(([, hide]) => !hide)
-    .map(([id]) => id);
-
-  const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
-  const { filterValue } = pluginStates.filter;
-
-  const { selectedDataIds } = pluginStates.select;
-
-  const hideableCols = ["createdAt", "updatedAt"];
-
-  onMount(async () => {
-    try {
-      isLoading = true;
-      loadVideoConsoles();
-    } catch (error) {
-      toast.error("Hubo un error al cargar los datos");
-    } finally {
-      isLoading = false;
-    }
-  });
+  let filterValue = writable("");
 </script>
 
 <div class="w-full">
@@ -187,13 +18,14 @@
       placeholder="Filtrar..."
       type="text"
       bind:value={$filterValue}
+      disabled={!$videoConsole.length}
     />
     <div class="flex items-center gap-4">
       <Button variant="secondary" on:click={() => dispatch("add")}>
         <div class="i-ph-plus mr-2" />
         Agregar
       </Button>
-      <DropdownMenu.Root>
+      <!-- <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild let:builder>
           <Button variant="outline" class="ml-auto" builders={[builder]}>
             Columns <div class="i-ph-caret-down ml-2 h-4 w-4" />
@@ -208,10 +40,13 @@
             {/if}
           {/each}
         </DropdownMenu.Content>
-      </DropdownMenu.Root>
+      </DropdownMenu.Root> -->
     </div>
   </div>
-  <div class="rounded-md border" in:fade>
+  <div class="text-center mt-8">
+    <p>No hay registros</p>
+  </div>
+  <!-- <div class="rounded-md border" in:fade>
     <Table.Root {...$tableAttrs}>
       <Table.Header>
         {#each $headerRows as headerRow}
@@ -310,5 +145,5 @@
       disabled={!$hasNextPage}
       on:click={() => ($pageIndex = $pageIndex + 1)}>Siguiente</Button
     >
-  </div>
+  </div> -->
 </div>
