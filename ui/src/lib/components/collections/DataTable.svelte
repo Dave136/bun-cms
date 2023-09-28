@@ -15,30 +15,17 @@
   import * as Table from "$lib/components/ui/table";
   import Actions from "../ui/data-table/data-table-actions.svelte";
   import { Button } from "$lib/components/ui/button";
-  import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
   import { cn } from "$lib/utils";
-  import { Input } from "$lib/components/ui/input";
   import DataTableCheckbox from "../ui/data-table/data-table-checkbox.svelte";
   import { createEventDispatcher, onMount } from "svelte";
   import toast from "svelte-french-toast";
   import { fade } from "svelte/transition";
   import { loadVideoConsoles, videoConsole } from "$lib/store/video-consoles";
   import HeaderAction from "./HeaderAction.svelte";
-  import { writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
 
   let isLoading = false;
-
-  $videoConsole = [
-    {
-      _id: "123213123",
-      games: [],
-      name: "",
-      createdAt: "",
-      updatedAt: "",
-    },
-  ];
 
   const table = createTable(videoConsole, {
     sort: addSortBy({ disableMultiSort: true }),
