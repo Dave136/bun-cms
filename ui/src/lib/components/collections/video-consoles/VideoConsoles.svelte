@@ -2,13 +2,22 @@
   import Button from "$lib/components/ui/button/button.svelte";
   import Input from "$lib/components/ui/input/input.svelte";
   import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
-  import { videoConsole } from "$lib/store/video-consoles";
-  import { createEventDispatcher } from "svelte";
+  import { loadVideoConsoles, videoConsole } from "$lib/store/video-consoles";
+  import { createEventDispatcher, onMount } from "svelte";
   import { writable } from "svelte/store";
+  import DataTable from "../DataTable.svelte";
 
   const dispatch = createEventDispatcher();
 
   let filterValue = writable("");
+
+  onMount(async () => {
+    try {
+      await loadVideoConsoles();
+    } catch (error) {
+      console.error(error);
+    }
+  });
 </script>
 
 <div class="w-full">
@@ -25,27 +34,15 @@
         <div class="i-ph-plus mr-2" />
         Agregar
       </Button>
-      <!-- <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild let:builder>
-          <Button variant="outline" class="ml-auto" builders={[builder]}>
-            Columns <div class="i-ph-caret-down ml-2 h-4 w-4" />
-          </Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          {#each flatColumns as col}
-            {#if hideableCols.includes(col.id)}
-              <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
-                {col.header}
-              </DropdownMenu.CheckboxItem>
-            {/if}
-          {/each}
-        </DropdownMenu.Content>
-      </DropdownMenu.Root> -->
     </div>
   </div>
-  <div class="text-center mt-8">
-    <p>No hay registros</p>
-  </div>
+  {#if $videoConsole.length}
+    <DataTable />
+  {:else}
+    <div class="text-center mt-8">
+      <p>No hay registros</p>
+    </div>
+  {/if}
   <!-- <div class="rounded-md border" in:fade>
     <Table.Root {...$tableAttrs}>
       <Table.Header>

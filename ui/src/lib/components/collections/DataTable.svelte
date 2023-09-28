@@ -23,6 +23,8 @@
   import toast from "svelte-french-toast";
   import { fade } from "svelte/transition";
   import { loadVideoConsoles, videoConsole } from "$lib/store/video-consoles";
+  import HeaderAction from "./HeaderAction.svelte";
+  import { writable } from "svelte/store";
 
   const dispatch = createEventDispatcher();
 
@@ -118,7 +120,15 @@
       // },
     }),
     table.column({
-      header: "",
+      header: () => {
+        return createRender(HeaderAction, {
+          cols: flatColumns,
+          hideable: hideableCols,
+          hideForId,
+        }).on("hide", (e) => {
+          hideForId[e.detail.id] = e.detail.hide;
+        });
+      },
       accessor: ({ _id }) => _id,
       cell: (item) => {
         return createRender(Actions, { id: item.value })
@@ -136,6 +146,9 @@
       plugins: {
         sort: {
           disable: true,
+        },
+        filter: {
+          exclude: true,
         },
       },
     }),
@@ -162,6 +175,7 @@
     .map(([id]) => id);
 
   const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
+  // TODO! Apply filter
   const { filterValue } = pluginStates.filter;
 
   const { selectedDataIds } = pluginStates.select;
@@ -181,36 +195,6 @@
 </script>
 
 <div class="w-full">
-  <div class="flex items-center py-4 justify-between">
-    <Input
-      class="max-w-sm"
-      placeholder="Filtrar..."
-      type="text"
-      bind:value={$filterValue}
-    />
-    <div class="flex items-center gap-4">
-      <Button variant="secondary" on:click={() => dispatch("add")}>
-        <div class="i-ph-plus mr-2" />
-        Agregar
-      </Button>
-      <DropdownMenu.Root>
-        <DropdownMenu.Trigger asChild let:builder>
-          <Button variant="outline" class="ml-auto" builders={[builder]}>
-            Columns <div class="i-ph-caret-down ml-2 h-4 w-4" />
-          </Button>
-        </DropdownMenu.Trigger>
-        <DropdownMenu.Content>
-          {#each flatColumns as col}
-            {#if hideableCols.includes(col.id)}
-              <DropdownMenu.CheckboxItem bind:checked={hideForId[col.id]}>
-                {col.header}
-              </DropdownMenu.CheckboxItem>
-            {/if}
-          {/each}
-        </DropdownMenu.Content>
-      </DropdownMenu.Root>
-    </div>
-  </div>
   <div class="rounded-md border" in:fade>
     <Table.Root {...$tableAttrs}>
       <Table.Header>

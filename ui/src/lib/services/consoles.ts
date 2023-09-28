@@ -14,9 +14,7 @@ export interface VideoConsole {
 
 async function getAll(): Promise<VideoConsole[]> {
   try {
-    const {
-      data: { data },
-    } = await api("/consoles");
+    const { data } = await api("/consoles");
     return data;
   } catch (error) {
     throw error;
