@@ -27,8 +27,9 @@ route.post("/login", async (c) => {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: "Strict",
+      domain: "http://localhost:5173",
       path: "/",
-      signingSecret: process.env.JWT_PRIVATE_KEY,
+      // signingSecret: process.env.JWT_PRIVATE_KEY,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
 
